@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Happy Dent – Dental Clinic CRM</title>
+<style>
+:root{--br:#3b2416;--gd:#c98a4b;--bg:#fbf6ee;--soft:#fbeedd;--line:#e3d6c4;--mu:#6b5a4c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{font-family:system-ui,'Segoe UI',sans-serif;background:var(--bg);color:#2a1a10;font-size:14px}
+button,input,select{font:inherit}
+.login{min-height:100vh;display:grid;place-items:center;padding:16px;background:linear-gradient(135deg,#f7efe4,#ead6bb)}
+.box{background:#fff;border-radius:22px;padding:24px;width:100%;max-width:400px;box-shadow:0 18px 44px #3b241633;text-align:center}
+.box h1{color:var(--br);font-size:30px;margin-bottom:14px}
+.tabs{display:flex;gap:6px;background:#f3e8d8;padding:5px;border-radius:14px;margin-bottom:14px}
+.tabs button{flex:1;border:0;background:none;padding:9px 4px;border-radius:10px;cursor:pointer;font-weight:700;color:var(--br)}
+.tabs button.on{background:var(--br);color:#fff}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fffdfa;margin-bottom:10px;min-width:0}
+.btn{background:var(--br);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--gd)}.btn.g{background:#2f9e5b}.btn.o{background:#fff;color:var(--br);border:1px solid var(--br)}.btn.s{padding:5px 10px;font-size:12px}
+.lnk{color:var(--gd);font-weight:700;cursor:pointer;display:inline-block;margin-top:10px}
+.app{display:flex;min-height:100vh}
+.side{width:210px;background:var(--br);color:#f6ecdf;padding:14px 10px;display:flex;flex-direction:column;gap:3px;flex-shrink:0}
+.side b.logo{font-size:18px;padding:6px 8px 14px;color:#fff}
+.side a{padding:10px 12px;border-radius:8px;cursor:pointer}.side a:hover{background:#5a3a24}.side a.on{background:var(--gd);color:#fff}
+.me{margin-top:auto;font-size:12px;padding:10px 8px;border-top:1px solid #ffffff30}
+.main{flex:1;min-width:0;padding:18px}
+h2{color:var(--br);margin-bottom:14px}
+.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 8px #0001;margin-bottom:16px;min-width:0}
+.card h3{margin-bottom:10px;color:var(--br)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:#fff;border-radius:12px;padding:14px;border-left:4px solid var(--gd);box-shadow:0 2px 8px #0001}.stat b{display:block;font-size:26px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:560px}
+th{text-align:left;color:var(--mu);font-size:12px;padding:9px 8px;border-bottom:1px solid #eee}td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.b{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;background:#eee}
+.b-Visited,.b-Active{background:#dff3e6;color:#1f7a44}.b-Booked{background:#dce8fb;color:#2b5aa8}.b-Pending,.b-Unvisited{background:#fcefd2;color:#9a6a0a}.b-Cancelled,.b-Inactive,.b-Skipped{background:#e6e2dc;color:#666}
+.hosp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.hc{padding:16px;border-radius:14px;border:2px solid var(--line);cursor:pointer}.hc.on,.hc:hover{border-color:var(--gd);background:var(--soft)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-bottom:12px}
+.slot{padding:9px;border-radius:10px;border:2px solid var(--line);text-align:center;cursor:pointer;background:#fff}
+.slot.on{background:var(--gd);color:#fff;border-color:var(--gd)}.slot.off{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;align-items:start}
+.att{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.ac{background:#fff;border-radius:18px;padding:22px 14px;text-align:center;box-shadow:0 2px 10px #0002;border-top:5px solid #e8a020}
+.ac.in{border-color:#2f9e5b}.ac.done{border-color:#4a7fd4}.ac .em{font-size:44px}.ac .tm{margin:10px 0;font-size:13px;line-height:1.7}
+.clock{font:800 30px system-ui;background:var(--soft);display:inline-block;padding:6px 18px;border-radius:14px;margin-bottom:16px;color:var(--br)}
+.toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--br);color:#fff;padding:11px 18px;border-radius:10px;z-index:99;max-width:92vw;display:none}
+@media(max-width:800px){.app{flex-direction:column}.side{width:100%;flex-direction:row;overflow-x:auto;padding:8px;align-items:center;gap:4px}.side b.logo{padding:0 8px}.side a{white-space:nowrap}.me{margin:0 0 0 auto;border:0;white-space:nowrap}.main{padding:12px}}
+</style></head><body>
+<div class="toast" id="toast"></div><div id="root"></div>
+<script>
+const $=s=>document.querySelector(s);
+const seed=()=>({h:[{id:1,name:'Keerthana Hospital'},{id:2,name:'Happy Dent Hospital'}],
+ d:[{id:1,name:'Dr. Arun',spec:'General Dentist',hid:2,email:'arun@happydent.com',pw:'admin123',on:1},{id:2,name:'Dr. Priya',spec:'Orthodontist',hid:2,email:'priya@happydent.com',pw:'admin123',on:1},{id:3,name:'Dr. Karthik',spec:'Oral Surgeon',hid:1,email:'karthik@keerthana.com',pw:'admin123',on:1}],
+ s:[{id:1,name:'Admin',role:'Admin',email:'admin@happydent.com',pw:'admin123',on:1},{id:2,name:'Divya',role:'Staff',email:'divya@happydent.com',pw:'admin123',on:1}],
+ p:[{id:1,name:'Kavya R',phone:'9876543210',age:28,email:'kavya@gmail.com',pw:'admin123'}],a:[],t:{}});
+let S=JSON.parse(localStorage.getItem('hd')||'null')||seed();
+let U=JSON.parse(sessionStorage.getItem('u')||'null'),V='',T='patient',REG=0,B={h:0,date:'',tm:''};
+const save=()=>localStorage.setItem('hd',JSON.stringify(S));
+const nid=a=>Math.max(0,...a.map(x=>x.id))+1;
+const day=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const hm=()=>new Date().toTimeString().slice(0,5);
+const fd=d=>new Date(d+'T00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+const ft=t=>new Date('2000-01-01T'+t).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bd=v=>`<span class="b b-${esc(v)}">${esc(v)}</span>`;
+const list=k=>({patient:S.p,doctor:S.d,staff:S.s})[k];
+const me=()=>list(U.k).find(x=>x.id==U.id);
+const R=()=>U.k==='staff'?me().role:U.k;
+const nm=(a,i)=>(S[a].find(x=>x.id==i)||{}).name||'';
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t.h);t.h=setTimeout(()=>t.style.display='none',3200)};
+const MENU={patient:[['dash','🏠 Home'],['book','➕ Book'],['appts','📅 My Appointments']],doctor:[['req','🔔 Requests'],['appts','📅 My Appointments'],['att','⏰ Attendance']],Admin:[['appts','📅 Appointments'],['doctors','🩺 Doctors'],['staff','👥 Staff'],['patients','🧑 Patients'],['att','⏰ Attendance']],Staff:[['att','⏰ Attendance']]};
+const go=v=>{V=v;draw()};
+
+/* ---------- auth ---------- */
+function login(){const e=$('#em').value.trim(),pw=$('#pw').value,u=list(T).find(x=>x.email===e&&x.pw===pw);
+ if(!u)return toast('❌ Invalid email or password');
+ if(u.on===0)return toast('⏳ Admin has not activated your account yet');
+ U={k:T,id:u.id};sessionStorage.setItem('u',JSON.stringify(U));V=MENU[R()][0][0];draw()}
+function register(){const f=id=>($('#'+id)?.value||'').trim(),e=f('em').toLowerCase(),
+ all=list(T);if(!f('rn')||!e||f('pw').length<6)return toast('Fill name, email and 6+ char password');
+ if(all.some(x=>x.email===e))return toast('Email already registered');
+ const b={id:nid(all),name:f('rn'),phone:f('rp'),email:e,pw:f('pw')};
+ if(T==='patient'){b.age=+f('ra');all.push(b);save();U={k:'patient',id:b.id};sessionStorage.setItem('u',JSON.stringify(U));V='book';return draw()}
+ b.on=0;if(T==='doctor'){b.spec=f('rs');b.hid=+f('rh')}else b.role='Staff';
+ all.push(b);save();REG=0;draw();toast('✅ Registered! Login after admin activates you')}
+function logout(){U=null;sessionStorage.removeItem('u');draw()}
+function tab(t){T=t;draw()}
+
+/* ---------- booking ---------- */
+const cap=(h,d)=>S.d.filter(x=>x.hid==h&&x.on==1).length;
+const taken=(h,d,t)=>S.a.filter(x=>x.hid==h&&x.date==d&&x.time==t&&x.st!='Cancelled').length;
+function book(){if(!B.tm)return toast('Pick a time slot');const r=$('#rs').value.trim();if(!r)return toast('Enter reason');
+ if(taken(B.h,B.date,B.tm)>=cap(B.h,B.date))return toast('Slot is full, pick another');
+ if(S.a.some(x=>x.pid==U.id&&x.date==B.date&&x.time==B.tm&&x.st!='Cancelled'))return toast('You already have an appointment then');
+ S.a.push({id:nid(S.a),pid:U.id,hid:B.h,did:null,date:B.date,time:B.tm,reason:r,st:'Pending'});save();B={h:0,date:'',tm:''};toast('🎉 Request sent! A doctor will confirm soon');go('appts')}
+function accept(id){const a=S.a.find(x=>x.id==id),d=me();
+ if(!a||a.st!='Pending'||a.did)return toast('Request no longer available'),draw();
+ if(S.a.some(x=>x.did==d.id&&x.date==a.date&&x.time==a.time&&x.st!='Cancelled'))return toast('You already have an appointment at that time');
+ a.did=d.id;a.st='Booked';save();toast('✅ Appointment accepted');draw()}
+function setSt(id,v){S.a.find(x=>x.id==id).st=v;save();draw()}
+function assign(id,v){const a=S.a.find(x=>x.id==id);a.did=v?+v:null;if(v&&a.st=='Pending')a.st='Booked';save();draw()}
+function cancel(id){if(confirm('Cancel appointment?')){S.a.find(x=>x.id==id).st='Cancelled';save();draw()}}
+
+/* ---------- attendance (own login only) ---------- */
+const ak=()=>U.k+U.id+'_'+day();
+function att(t){const k=ak(),r=S.t[k]=S.t[k]||{};if(t=='in'&&!r.i)r.i=hm();if(t=='out'&&r.i&&!r.o)r.o=hm();save();draw()}
+
+/* ---------- admin CRUD ---------- */
+function addD(){const f=id=>$('#'+id).value.trim();if(!f('dn')||!f('de'))return toast('Name and email required');
+ S.d.push({id:nid(S.d),name:f('dn'),spec:f('ds'),hid:+f('dh'),email:f('de').toLowerCase(),pw:f('dp')||'staff123',on:1});save();draw()}
+function addS(){const f=id=>$('#'+id).value.trim();if(!f('sn')||!f('se'))return toast('Name and email required');
+ S.s.push({id:nid(S.s),name:f('sn'),role:f('sr'),email:f('se').toLowerCase(),pw:f('sp')||'staff123',on:1});save();draw()}
+function tog(k,id){const x=S[k].find(y=>y.id==id);x.on=x.on==1?0:1;save();draw()}
+function del(k,id){if(!confirm('Delete?'))return;if(k=='s'&&U.k=='staff'&&id==U.id)return toast('You cannot delete yourself');S[k]=S[k].filter(x=>x.id!=id);save();draw()}
+
+/* ---------- views ---------- */
+function apptTable(rows,role){
+ if(!rows.length)return '<div class="card">No appointments yet.</div>';
+ return `<div class="card"><div class="tw"><table><tr><th>Date<th>Time<th>Patient<th>Doctor<th>Hospital<th>Reason<th>Status<th></tr>`+
+ rows.sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time)).map(a=>{
+  let dc=a.did?esc(nm('d',a.did)):'<i style="color:var(--mu)">Awaiting doctor</i>',ac='';
+  if(role=='Admin'){dc=`<select onchange="assign(${a.id},this.value)" style="margin:0;padding:5px"><option value="">— Not assigned —</option>${S.d.filter(d=>d.hid==a.hid&&d.on==1).map(d=>`<option value="${d.id}"${d.id==a.did?' selected':''}>${esc(d.name)}</option>`).join('')}</select>`}
+  if(role=='Admin'||role=='doctor')ac=`<select onchange="setSt(${a.id},this.value)" style="margin:0;padding:5px">${['Pending','Booked','Visited','Unvisited','Skipped','Cancelled'].map(s=>`<option${s==a.st?' selected':''}>${s}</option>`).join('')}</select>`;
+  if(role=='patient'&&['Pending','Booked'].includes(a.st))ac=`<button class="btn o s" onclick="cancel(${a.id})">Cancel</button>`;
+  return `<tr><td>${fd(a.date)}<td>${ft(a.time)}<td>${esc(nm('p',a.pid))}<td>${dc}<td>${esc(nm('h',a.hid))}<td>${esc(a.reason)}<td>${bd(a.st)}<td>${ac}</tr>`}).join('')+`</table></div></div>`}
+
+function vDash(){const m=S.a.filter(a=>a.pid==U.id),pd=m.filter(a=>a.st=='Pending').length;
+ return `<h2>Welcome, ${esc(me().name)} 👋</h2><div class="stats"><div class="stat">Total<b>${m.length}</b></div><div class="stat">Awaiting doctor<b>${pd}</b></div><div class="stat">Booked<b>${m.filter(a=>a.st=='Booked').length}</b></div><div class="stat">Visited<b>${m.filter(a=>a.st=='Visited').length}</b></div></div><button class="btn" onclick="go('book')">➕ Book Appointment</button>`}
+
+function vBook(){let o=`<h2>Book Appointment</h2><div class="card"><h3>1️⃣ Choose Hospital</h3><div class="hosp">${S.h.map(h=>`<div class="hc${B.h==h.id?' on':''}" onclick="B={h:${h.id},date:'',tm:''};draw()">🏥 <b>${esc(h.name)}</b></div>`).join('')}</div></div>`;
+ if(!B.h)return o;
+ o+=`<div class="card"><h3>2️⃣ Pick Date</h3><input type="date" min="${day()}" value="${B.date}" onchange="B.date=this.value;B.tm='';draw()" style="max-width:240px"></div>`;
+ if(B.date&&B.date>=day()){const c=cap(B.h,B.date);
+  if(!c)return o+'<div class="card">No doctors available in this hospital.</div>';
+  let sl='';for(let m=540;m<1020;m+=30){if(m>=780&&m<840)continue;const t=String(m/60|0).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+   const off=taken(B.h,B.date,t)>=c||(B.date==day()&&t<=hm());
+   sl+=`<div class="slot${off?' off':''}${B.tm==t?' on':''}"${off?'':` onclick="B.tm='${t}';draw()"`}>${ft(t)}</div>`}
+  o+=`<div class="card"><h3>3️⃣ Available Slots – ${fd(B.date)}</h3><div class="slots">${sl}</div><input id="rs" placeholder="Reason for visit (a free doctor will accept)"><button class="btn" onclick="book()">✅ Send Request</button></div>`}
+ return o}
+
+function vReq(){const d=me(),rows=S.a.filter(a=>a.st=='Pending'&&!a.did&&a.hid==d.hid).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ return `<h2>Patient Requests – ${esc(nm('h',d.hid))}</h2><p style="margin-bottom:12px;color:var(--mu)">Read the reason and accept if you are free at that time.</p>`+
+ (rows.length?`<div class="card"><div class="tw"><table><tr><th>Date<th>Time<th>Patient<th>Reason<th></tr>${rows.map(a=>`<tr><td>${fd(a.date)}<td>${ft(a.time)}<td>${esc(nm('p',a.pid))}<td>${esc(a.reason)}<td><button class="btn g s" onclick="accept(${a.id})">✅ Accept</button></tr>`).join('')}</table></div></div>`:'<div class="card">No pending requests 🎉</div>')}
+
+function vAtt(){const r=S.t[ak()]||{},m=me(),st=!r.i?'':!r.o?'in':'done';
+ const wk=r.i&&r.o?(()=>{const s=(new Date('2000-01-01T'+r.o)-new Date('2000-01-01T'+r.i))/6e4;return `${s/60|0}h ${s%60}m`})():'';
+ return `<h2>Attendance</h2><div class="clock" id="ck">${new Date().toLocaleTimeString()}</div><div class="att"><div class="ac ${st}"><div class="em">${U.k=='doctor'?'🩺':'🪥'}</div><b>${esc(m.name)}</b><br><small>${esc(R())}</small>
+ <div class="tm">🟢 In: ${r.i?ft(r.i):'–'}<br>🔴 Out: ${r.o?ft(r.o):'–'}${wk?'<br>⏱ Worked: '+wk:''}</div>
+ ${!r.i?'<button class="btn g" style="width:100%" onclick="att(\'in\')">🚪 Check In</button>':!r.o?'<button class="btn" style="width:100%;background:#e8742a" onclick="att(\'out\')">🏃 Check Out</button>':'<span class="b b-Visited">✅ Day completed</span>'}</div></div>`}
+
+function vDoctors(){return `<h2>Doctors</h2><div class="card"><h3>Add new doctor</h3><div class="form"><input id="dn" placeholder="Name"><input id="ds" placeholder="Specialization"><select id="dh">${S.h.map(h=>`<option value="${h.id}">${esc(h.name)}</option>`).join('')}</select><input id="de" type="email" placeholder="Login email"><input id="dp" placeholder="Password (blank = staff123)"><button class="btn" onclick="addD()">＋ Add</button></div></div>
+ <div class="card"><div class="tw"><table><tr><th>Name<th>Specialization<th>Hospital<th>Email<th>Status<th></tr>${S.d.map(d=>`<tr><td>${esc(d.name)}<td>${esc(d.spec)}<td>${esc(nm('h',d.hid))}<td>${esc(d.email)}<td>${bd(d.on==1?'Active':'Inactive')}<td><button class="btn o s" onclick="tog('d',${d.id})">${d.on==1?'Deactivate':'Activate'}</button> <button class="btn o s" onclick="del('d',${d.id})">🗑️</button></tr>`).join('')}</table></div></div>`}
+
+function vStaff(){return `<h2>Staff</h2><div class="card"><h3>Add new staff</h3><div class="form"><input id="sn" placeholder="Name"><select id="sr"><option>Staff</option><option>Admin</option></select><input id="se" type="email" placeholder="Login email"><input id="sp" placeholder="Password (blank = staff123)"><button class="btn" onclick="addS()">＋ Add</button></div></div>
+ <div class="card"><div class="tw"><table><tr><th>Name<th>Role<th>Email<th>Status<th></tr>${S.s.map(s=>`<tr><td>${esc(s.name)}<td>${esc(s.role)}<td>${esc(s.email)}<td>${bd(s.on==1?'Active':'Inactive')}<td><button class="btn o s" onclick="tog('s',${s.id})">${s.on==1?'Deactivate':'Activate'}</button> <button class="btn o s" onclick="del('s',${s.id})">🗑️</button></tr>`).join('')}</table></div></div>`}
+
+function vPatients(){return `<h2>Patients</h2><div class="card"><div class="tw"><table><tr><th>Name<th>Phone<th>Age<th>Email</tr>${S.p.map(p=>`<tr><td>${esc(p.name)}<td>${esc(p.phone)}<td>${esc(p.age)}<td>${esc(p.email)}</tr>`).join('')}</table></div></div>`}
+
+function vLogin(){const P=T=='patient',D=T=='doctor',def={patient:'kavya@gmail.com',doctor:'arun@happydent.com',staff:'admin@happydent.com'}[T];
+ return `<div class="login"><div class="box"><div style="font-size:54px">🦷</div><h1>Happy Dent</h1>
+ <div class="tabs">${[['patient','🧑 Patient'],['doctor','🩺 Doctor'],['staff','👥 Staff']].map(x=>`<button class="${T==x[0]?'on':''}" onclick="tab('${x[0]}')">${x[1]}</button>`).join('')}</div>
+ ${REG?`<input id="rn" placeholder="Full name"><input id="rp" placeholder="Mobile number">${P?'<input id="ra" type="number" placeholder="Age">':''}${D?`<input id="rs" placeholder="Specialization"><select id="rh">${S.h.map(h=>`<option value="${h.id}">${esc(h.name)}</option>`).join('')}</select>`:''}`:''}
+ <input id="em" type="email" placeholder="Email" value="${REG?'':def}"><input id="pw" type="password" placeholder="${REG?'Create password (6+ chars)':'Password'}" value="${REG?'':'admin123'}">
+ <button class="btn" style="width:100%" onclick="${REG?'register()':'login()'}">${REG?'Create Account 🎉':'Login 😁'}</button>
+ <span class="lnk" onclick="REG=${REG?0:1};draw()">${REG?'← Back to login':'New '+T+'? Register here →'}</span>
+ ${!P&&REG?'<p style="font-size:12px;color:var(--mu);margin-top:8px">Admin must activate your account before you can login.</p>':''}
+ ${REG?'':'<p style="font-size:12px;color:var(--mu);margin-top:8px">Demo password: admin123</p>'}</div></div>`}
+
+function draw(){const root=$('#root');
+ if(!U){root.innerHTML=vLogin();return}
+ const r=R(),menu=MENU[r];if(!menu.some(m=>m[0]==V))V=menu[0][0];
+ let c='';const role=r;
+ if(V=='dash')c=vDash();else if(V=='book')c=vBook();else if(V=='req')c=vReq();else if(V=='att')c=vAtt();
+ else if(V=='doctors')c=vDoctors();else if(V=='staff')c=vStaff();else if(V=='patients')c=vPatients();
+ else if(V=='appts'){const rows=role=='patient'?S.a.filter(a=>a.pid==U.id):role=='doctor'?S.a.filter(a=>a.did==U.id):S.a;c='<h2>Appointments</h2>'+apptTable(rows.slice(),role)}
+ root.innerHTML=`<div class="app"><aside class="side"><b class="logo">🦷 Happy Dent</b>${menu.map(m=>`<a class="${V==m[0]?'on':''}" onclick="go('${m[0]}')">${m[1]}</a>`).join('')}<div class="me"><b>${esc(me().name)}</b><br>${esc(r)} · <a onclick="logout()" style="display:inline;padding:0;color:var(--gd)">Logout</a></div></aside><main class="main">${c}</main></div>`}
+setInterval(()=>{const c=$('#ck');if(c)c.textContent=new Date().toLocaleTimeString()},1000);
+draw();
+</script></body></html>
